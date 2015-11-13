@@ -71,6 +71,7 @@ def main():
                 name = irc_msg.split("!card ")[1].strip()
                 cards = finder.query(name)
                 for card in cards:
+                    print(card)
                     for line in [l for chunk in card.splitlines() for l in wrap(chunk, max_length)]:
                         irc.send_msg(channel, line)
 
