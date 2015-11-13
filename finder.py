@@ -76,5 +76,5 @@ class CardFinder(object):
         if 'cmc' in card and 'manaCost' in card:
             cost = card['manaCost'].replace("}", "").replace("{", "")
             info_line = ", ".join([info_line, "{} ({})".format(cost, card['cmc'])])
-
-        return "\n".join([l for l in [name_line, info_line, card.get('text')] if l])
+        header = " *** ".join([l for l in [name_line, info_line] if l])
+        return "\n".join([l for l in [header, card.get('text')] if l])
