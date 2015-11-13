@@ -64,19 +64,16 @@ def main():
                 else:
                     irc.send_msg(channel, "Error fetching data. Using last known good.")
 
-            else:
-                while "!card " in irc_msg or "!card(" in irc_msg:
-                    if "!card " in irc_msg:
-                        name = irc_msg.split("!card ", 1)[1].strip()
-                        irc_msg = ""
-                        cards = finder.query(name)
-                    else:
-                        # TODO: Implement "!card(<name>) inline syntax, or "!card <name> endcard!"
-                        cards = []
+            elif "!source" in irc_msg:
+                irc.send_msg(channel, "My source code is at https://github.com/midnightlynx/magpybot")
 
-                    for card in cards:
-                        for line in [l for chunk in card.splitlines() for l in wrap(chunk, max_length)]:
-                            irc.send_msg(channel, line)
+            elif "!card " in irc_msg:
+                # TODO: Implement "!card(<name>) inline syntax, or "!card <name> endcard!"
+                name = irc_msg.split("!card ")[1].strip()
+                cards = finder.query(name)
+                for card in cards:
+                    for line in [l for chunk in card.splitlines() for l in wrap(chunk, max_length)]:
+                        irc.send_msg(channel, line)
 
 
 if __name__ == '__main__':
