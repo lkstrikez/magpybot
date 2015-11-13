@@ -16,9 +16,9 @@ BOTNICK = "magpybot"  # Your bots nick
 def main():
 
     parser = argparse.ArgumentParser(description="Connect IRC bot for querying Magic: the Gathering card data")
-    parser.add_argument("-s", "--server", type=str, required=True, default=SERVER)
-    parser.add_argument("-c", "--channel", type=str, required=True, default=CHANNEL)
-    parser.add_argument("-n", "--nick", type=str, required=True, default=BOTNICK)
+    parser.add_argument("-s", "--server", type=str, default=SERVER)
+    parser.add_argument("-c", "--channel", type=str, default=CHANNEL)
+    parser.add_argument("-n", "--nick", type=str, default=BOTNICK)
     args = parser.parse_args()
 
     irc = BotSocket(args.server, 6667, args.nick)
