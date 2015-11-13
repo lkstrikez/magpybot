@@ -1,0 +1,8 @@
+SETUP:
+
+In a Python 3.x environment, run 'pip install -r requirements.txt'
+
+USAGE:
+
+"python bot.py [-s <server>] [-c <channel>] [-n <nick>]"
+Defaults to irc.cat.pdx.edu, #mtg, magpybot
