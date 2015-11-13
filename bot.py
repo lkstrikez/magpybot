@@ -41,7 +41,6 @@ def main():
 
         if "PING " in irc_msg:
             irc.ping()
-            irc.userhost(BOTNICK)
 
         elif " PRIVMSG " in irc_msg:
             nick = irc_msg.split('!')[0][1:]
