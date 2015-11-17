@@ -1,4 +1,5 @@
 import json
+import random
 
 import requests
 from trans import trans
@@ -45,7 +46,7 @@ class CardFinder(object):
 
     @staticmethod
     def _dictify(card):
-        fields = ['type', 'name', 'names', 'cmc', 'manaCost', 'loyalty', 'text', 'power', 'toughness', 'hand', 'life']
+        fields = ['type', 'types', 'name', 'names', 'cmc', 'manaCost', 'loyalty', 'text', 'power', 'toughness', 'hand', 'life']
         key = trans(card['name']).lower()
         value = dict([(k, v) for k, v in card.items() if k in fields])
         return key, value
@@ -78,3 +79,10 @@ class CardFinder(object):
             info_line = ", ".join([info_line, "{} ({})".format(cost, card['cmc'])])
         header = " *** ".join([l for l in [name_line, info_line] if l])
         return "\n".join([l for l in [header, card.get('text')] if l])
+
+    def momir(self, cost):
+        creatures = [c for c in self.data.values() if 'Creature' in c.get('types', []) and c.get('cmc') == cost]
+        if creatures:
+            monster = random.choice(creatures)
+            return self._card_to_messages(monster)
+        return "Momir cannot help you."

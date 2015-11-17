@@ -75,6 +75,17 @@ def main():
                     for line in [l for chunk in card.splitlines() for l in wrap(chunk, max_length)]:
                         irc.send_msg(channel, line)
 
+            elif "!momir " in irc_msg:
+                cost = irc_msg.split("!momir ")[1].strip()
+                try:
+                    cost = int(cost)
+                    if cost < 0:
+                        raise ValueError
+                    card = finder.momir(cost)
+                    for line in [l for chunk in card.splitlines() for l in wrap(chunk, max_length)]:
+                        irc.send_msg(channel, line)
+                except ValueError:
+                    irc.send_msg(channel, "Momir has no time for your foolishness.")
 
 if __name__ == '__main__':
     main()
