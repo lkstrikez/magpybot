@@ -1,8 +1,11 @@
 import json
+import logging
 import random
 
 import requests
 from trans import trans
+
+logger = logging.getLogger(__file__)
 
 
 class CardFinder(object):
@@ -29,16 +32,19 @@ class CardFinder(object):
 
     def query(self, card_name):
         if not card_name:
-            print("Card query: No name")
+            logger.warning("Card query: No names")
             return ["Yes...?"]
         else:
             results = self._find_cards(card_name)
             if not results:
-                print("Card query: No cards found: {}".format(card_name))
+                logger.warning('Card query: No cards found, query="%s"', card_name)
                 return ["Oracle has no time for your games."]
             else:
-                print("Cards Query: Found {}".format(card_name))
-                return [self._card_to_messages(card) for card in results]
+                logger.debug('card_query=success, query="%s"', card_name)
+                cards = [self._card_to_messages(card) for card in results]
+                for card in cards:
+                    logger.info('query="%s", found card:\n%s', card_name, card)
+                return cards
 
     def _find_cards(self, card_name):
         names = trans(card_name).split("//")
@@ -83,6 +89,8 @@ class CardFinder(object):
     def momir(self, cost):
         creatures = [c for c in self.data.values() if 'Creature' in c.get('types', []) and c.get('cmc') == cost]
         if creatures:
-            monster = random.choice(creatures)
-            return self._card_to_messages(monster)
+            card = self._card_to_messages(random.choice(creatures))
+            logger.info('momir cost=%s found card:\n%s', cost, card)
+            return card
+        logger.warning('momir cost=%s no cards found', cost)
         return "Momir cannot help you."

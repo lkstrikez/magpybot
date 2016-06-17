@@ -1,3 +1,4 @@
+import logging
 import socket
 
 
@@ -19,7 +20,12 @@ class BotSocket(object):
             self.sock.send("PRIVMSG {0} :{1}\n".format(chan, msg).encode('utf-8'))
 
     def get_msg(self):
-        return self.sock.recv(2048).decode('utf-8').strip("\n\r ")
+        msg = self.sock.recv(2048)
+        try:
+            return msg.decode('utf-8').strip()
+        except UnicodeDecodeError:
+            logging.exception('could not decode message: "%s"', msg)
+            return ''
 
     def userhost(self, nick):
         if nick:
