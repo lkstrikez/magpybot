@@ -43,7 +43,7 @@ class CardFinder(object):
                 logger.debug('card_query=success, query="%s"', card_name)
                 cards = [self._card_to_messages(card) for card in results]
                 for card in cards:
-                    logger.info('query="%s", found card:\n%s', card_name, card)
+                    logger.info('query="%s", found card:\n%s', card_name, indent(card))
                 return cards
 
     def _find_cards(self, card_name):
@@ -90,7 +90,11 @@ class CardFinder(object):
         creatures = [c for c in self.data.values() if 'Creature' in c.get('types', []) and c.get('cmc') == cost]
         if creatures:
             card = self._card_to_messages(random.choice(creatures))
-            logger.info('momir cost=%s found card:\n%s', cost, card)
+            logger.info('momir cost=%s found card:\n%s', cost, indent(card))
             return card
         logger.warning('momir cost=%s no cards found', cost)
         return "Momir cannot help you."
+
+
+def indent(log_str):
+    return "\n".join(['    {}'.format(line) for line in log_str.splitlines()])

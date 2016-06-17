@@ -7,7 +7,7 @@ import argparse
 import logging.config
 
 from client import BotSocket
-from finder import CardFinder
+from finder import CardFinder, indent
 
 SERVER = "irc.cat.pdx.edu"  # Server
 CHANNEL = "#mtg"  # Channel
@@ -71,7 +71,7 @@ def main():
 
     while True:  # Be careful with these! it might send you to an infinite loop
         irc_msg = irc.get_msg()
-        logger.debug('Message received:\n%s', irc_msg)  # Here we print what's coming from the SERVER
+        logger.debug('Message received:\n%s', indent(irc_msg))  # Here we print what's coming from the SERVER
 
         if "PING " in irc_msg:
             irc.ping()
@@ -122,7 +122,6 @@ def main():
                     card = finder.momir(cost)
                     for line in [l for chunk in card.splitlines() for l in wrap(chunk, max_length)]:
                         irc.send_msg(channel, line)
-                    logger.info('Momir cost %s found card:%s\n', cost, card)
                 except ValueError:
                     logger.warn('Invalid Momir cost: "%s"', cost)
                     irc.send_msg(channel, "Momir has no time for your foolishness.")
