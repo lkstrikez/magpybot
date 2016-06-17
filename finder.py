@@ -5,7 +5,7 @@ import random
 import requests
 from trans import trans
 
-logger = logging.getLogger(__file__)
+logger = logging.getLogger(__name__)
 
 
 class CardFinder(object):

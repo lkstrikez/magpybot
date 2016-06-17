@@ -1,6 +1,8 @@
 import logging
 import socket
 
+logger = logging.getLogger(__name__)
+
 
 class BotSocket(object):
     def __init__(self, server, port, bot_nick):
@@ -24,7 +26,7 @@ class BotSocket(object):
         try:
             return msg.decode('utf-8').strip()
         except UnicodeDecodeError:
-            logging.exception('could not decode message: "%s"', msg)
+            logger.exception('could not decode message: "%s"', msg)
             return ''
 
     def userhost(self, nick):

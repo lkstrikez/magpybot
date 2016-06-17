@@ -46,10 +46,10 @@ log_cfg = {
 }
 
 logging.config.dictConfig(log_cfg)
+logger = logging.getLogger(__name__)
 
 
 def main():
-    logger = logging.getLogger(__file__.lower())
     parser = argparse.ArgumentParser(description="Connect IRC bot for querying Magic: the Gathering card data")
     parser.add_argument("-s", "--server", type=str, default=SERVER)
     parser.add_argument("-c", "--channel", type=str, default=CHANNEL)
