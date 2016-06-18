@@ -71,12 +71,14 @@ def main():
 
     while True:  # Be careful with these! it might send you to an infinite loop
         irc_msg = irc.get_msg()
-        logger.debug('Message received:\n%s', indent(irc_msg))  # Here we print what's coming from the SERVER
 
         if "PING " in irc_msg:
             irc.ping()
 
         elif " PRIVMSG " in irc_msg:
+            # Here we print what's coming from the SERVER
+            logger.debug('Message received:\n%s', indent(irc_msg))
+
             nick = irc_msg.split('!')[0][1:]
             channel = irc_msg.split(' PRIVMSG ')[-1].split(' :')[0]
             if nick == args.nick:  # My own messages -- ignore.
@@ -87,13 +89,38 @@ def main():
             # TODO: Get actual "<nick>!<user>@<host>" length with USERHOST command
             max_length = 447 - len("{0}!~{0}@ PRIVMSG {1} :".format(args.nick, channel))
 
-            if "!update" in irc_msg:
+            if "!help" in irc_msg:
+                logger.info('Command help')
+                sub = irc_msg.split("!help")[1].strip()
+                if sub:
+                    sub = sub.split()[0]
+                    if sub in ['update', '!update']:
+                        irc.send_msg(channel, '"!update": Refreshes card data cache. Use after new set releases.')
+                    elif sub in ['source', '!source']:
+                        irc.send_msg(channel, '"!source": Get the Github URL for my source code!')
+                    elif sub in ['card', '!card']:
+                        msg = [
+                            '"!card CARDNAME [// CARDNAME]*": Get card data for each',
+                            ' CARDNAME. If at least one CARDNAME is valid, all invalid names',
+                            ' are silently ignored.'
+                        ]
+                        irc.send_msg(channel, ''.join(msg))
+                    elif sub in ['momir', '!momir']:
+                        irc.send_msg(channel, '"!momir COST": Returns a randomly chosen creature whose CMC equals COST')
+                    else:
+                        irc.send_msg(channel, "Commands: '!card', '!momir', '!update', '!source', '!help'")
+                        irc.send_msg(channel, 'Try "!help COMMAND" for details on each command')
+                else:
+                    irc.send_msg(channel, "Commands: '!card', '!momir', '!update', '!source', '!help'")
+                    irc.send_msg(channel, 'Try "!help COMMAND" for details on each command')
+
+            elif "!update" in irc_msg:
                 logger.info("Update")
                 irc.send_msg(channel, "Updating card data...")
                 finder.update()
 
                 if finder.fresh:
-                    logger.debug('Udate successful')
+                    logger.debug('Update successful')
                     irc.send_msg(channel, "Card data updated.")
                 else:
                     logger.warn('Error fetching updated data!')
