@@ -91,7 +91,7 @@ def main():
 
             if "!help" in irc_msg:
                 logger.info('Command help')
-                sub = irc_msg.split("!help")[1].strip()
+                sub = irc_msg.split("!help", 1)[1].strip()
                 if sub:
                     sub = sub.split()[0]
                     if sub in ['update', '!update']:
@@ -107,6 +107,9 @@ def main():
                         irc.send_msg(channel, ''.join(msg))
                     elif sub in ['momir', '!momir']:
                         irc.send_msg(channel, '"!momir COST": Returns a randomly chosen creature whose CMC equals COST')
+                    elif sub in ['help', '!help']:
+                        irc.send_msg(channel, '"!help": You... You just used it.')
+
                     else:
                         irc.send_msg(channel, "Commands: '!card', '!momir', '!update', '!source', '!help'")
                         irc.send_msg(channel, 'Try "!help COMMAND" for details on each command')
